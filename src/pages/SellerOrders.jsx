@@ -117,7 +117,7 @@ export default function SellerOrders() {
               className="flex gap-4 mt-4 border-t pt-4"
             >
               <img
-                src={`https://traditionalbackend-1.onrender.com/${item.product?.images?.[0]}`}
+                src={`https://traditionalbackend-1.onrender.com${item.product?.images?.[0]}`}
                 className="h-16 w-16 rounded object-cover"
               />
               <div className="flex-1">
