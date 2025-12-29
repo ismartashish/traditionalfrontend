@@ -17,7 +17,7 @@ export default function Profile() {
   const profileImage = preview
     ? preview
     : user.profileImage
-    ? `https://traditionalbackend.onrender.com${user.profileImage}`
+    ? `https://traditionalbackend-1.onrender.com{user.profileImage}`
     : "/avatar.png";
 
   const uploadImage = async (e) => {
