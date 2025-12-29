@@ -36,7 +36,7 @@ export default function Products() {
           className="bg-white rounded-xl shadow hover:shadow-lg transition"
         >
           <img
-            src={`https://traditionalbackend.onrender.com${p.images[0]}`}
+            src={`https://traditionalbackend-1.onrender.com${p.images[0]}`}
             className="h-48 w-full object-cover rounded-t-xl"
           />
           <div className="p-4">
