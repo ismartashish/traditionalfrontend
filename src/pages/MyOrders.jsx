@@ -67,7 +67,7 @@ export default function MyOrders() {
                 className="flex items-center gap-4 border-t pt-3"
               >
                 <img
-                  src={`https://traditionalbackend.onrender.com${item.product?.images?.[0]}`}
+                  src={`https://traditionalbackend-1.onrender.com${item.product?.images?.[0]}`}
                   alt={item.product?.title}
                   className="w-16 h-16 rounded object-cover border"
                 />
