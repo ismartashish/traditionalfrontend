@@ -22,7 +22,7 @@ export default function Navbar() {
   const searchRef = useRef(null);
 
   const profileImage = user?.profileImage
-    ? `https://traditionalbackend.onrender.com${user.profileImage}`
+    ? `https://traditionalbackend-1.onrender.com${user.profileImage}`
     : "/public/categories/avatar.png";
 
   const handleLogout = () => {
