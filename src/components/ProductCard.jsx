@@ -9,7 +9,7 @@ export default function ProductCard({ product }) {
 
   const imageUrl =
     product.images?.length > 0
-      ? `https://traditionalbackend.onrender.com${product.images[0]}`
+      ? `https://traditionalbackend-1.onrender.com${product.images[0]}`
       : "/no-image.png";
 
   const outOfStock = product.stock <= 0;
