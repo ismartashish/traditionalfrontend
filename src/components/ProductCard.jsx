@@ -9,7 +9,9 @@ export default function ProductCard({ product }) {
 
   const imageUrl =
     product.images?.length > 0
-      ? `https://traditionalbackend-1.onrender.com${product.images[0]}`
+      ? product.images[0].startsWith("http")
+        ? product.images[0]
+        : `https://traditionalbackend-1.onrender.com${product.images[0]}`
       : "/no-image.png";
 
   const outOfStock = product.stock <= 0;
@@ -68,6 +70,10 @@ export default function ProductCard({ product }) {
           src={imageUrl}
           alt={product.title}
           className="h-48 w-full object-cover rounded-t-xl"
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = "/no-image.png";
+          }}
         />
       </Link>
 
@@ -90,9 +96,7 @@ export default function ProductCard({ product }) {
           </span>
 
           {outOfStock ? (
-            <span className="text-red-600 text-xs">
-              Out of stock
-            </span>
+            <span className="text-red-600 text-xs">Out of stock</span>
           ) : lowStock ? (
             <span className="text-yellow-600 text-xs">
               Only {product.stock} left
