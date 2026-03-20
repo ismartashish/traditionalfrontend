@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Products from "./pages/Products";
-
+import Chatbot from "./components/Chatbot";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -54,6 +54,7 @@ export default function App() {
       <Navbar />
       <UnderProgress />
      <FloatingSlogan /> 
+     <Chatbot />
       <Routes>
         {/* PUBLIC */}
         <Route path="/" element={<Home />} />
