@@ -4,12 +4,15 @@ import { useContext, useState, useEffect, useRef } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { clearCart } from "../redux/cartSlice";
 import api from "../services/api";
+import { useChatbot } from "../context/ChatbotContext";
 
 export default function Navbar() {
   const cart = useSelector((state) => state.cart);
   const dispatch = useDispatch();
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  const { setOpen: openChat } = useChatbot(); // 🔥 chatbot control
 
   const [open, setOpen] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
@@ -21,9 +24,10 @@ export default function Navbar() {
   const menuRef = useRef(null);
   const searchRef = useRef(null);
 
+  // ✅ FIXED avatar path
   const profileImage = user?.profileImage
     ? `https://traditionalbackend-1.onrender.com${user.profileImage}`
-    : "/public/categories/avatar.png";
+    : "/categories/avatar.png";
 
   const handleLogout = () => {
     logout();
@@ -31,7 +35,7 @@ export default function Navbar() {
     navigate("/login");
   };
 
-  /* CLOSE DROPDOWNS ON OUTSIDE CLICK */
+  /* CLOSE DROPDOWNS */
   useEffect(() => {
     const handler = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
@@ -45,7 +49,7 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  /* SEARCH (HALF WORD / STATE / NAME) */
+  /* SEARCH */
   useEffect(() => {
     if (!query.trim()) {
       setResults([]);
@@ -78,7 +82,7 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* SEARCH BAR (DESKTOP ONLY) */}
+        {/* SEARCH */}
         <div
           ref={searchRef}
           className="relative hidden md:block w-full max-w-md"
@@ -116,6 +120,14 @@ export default function Navbar() {
         {/* DESKTOP MENU */}
         <div className="hidden md:flex items-center gap-6">
 
+          {/* 💬 CHAT BUTTON */}
+          <button
+            onClick={() => openChat(true)}
+            className="font-medium hover:text-yellow-200"
+          >
+            💬 Chat
+          </button>
+
           {/* CART */}
           <Link to="/cart" className="relative font-medium">
             🛒 Cart
@@ -142,7 +154,7 @@ export default function Navbar() {
                 My Orders
               </Link>
 
-              {/* 3 DOT MENU */}
+              {/* MENU */}
               <div className="relative" ref={menuRef}>
                 <button
                   onClick={() => setOpen(!open)}
@@ -154,7 +166,6 @@ export default function Navbar() {
                 {open && (
                   <div className="absolute right-0 mt-3 bg-white text-black rounded-xl shadow-lg w-56 overflow-hidden">
 
-                    {/* USER HEADER */}
                     <div className="px-4 py-3 border-b flex items-center gap-3">
                       <img
                         src={profileImage}
@@ -169,31 +180,23 @@ export default function Navbar() {
                       </div>
                     </div>
 
-                    {/* HOME BUTTON (NEW) */}
-                    <Item
-                      label="🏠 Home"
-                      onClick={() => {
-                        navigate("/");
-                        setOpen(false);
-                      }}
-                    />
+                    <Item label="🏠 Home" onClick={() => navigate("/")} />
 
-                    {/* SELLER BADGE */}
                     {user.role === "seller" && (
                       <div className="px-4 py-2 bg-orange-50 text-orange-700 text-sm font-medium">
                         🏪 Seller Partner
                       </div>
                     )}
 
-                    <Item label="👤 My Profile" onClick={() => navigate("/profile")} />
+                    <Item label="👤 Profile" onClick={() => navigate("/profile")} />
                     <Item label="⚙️ Settings" onClick={() => navigate("/settings")} />
-                    <Item label="🧾 Purchase History" onClick={() => navigate("/purchase-history")} />
+                    <Item label="🧾 History" onClick={() => navigate("/purchase-history")} />
 
                     {user.role === "seller" && (
                       <>
                         <div className="border-t my-1" />
-                        <Item label="🏪 Seller Dashboard" onClick={() => navigate("/seller")} />
-                        <Item label="📦 Orders Received" onClick={() => navigate("/seller/orders")} />
+                        <Item label="🏪 Dashboard" onClick={() => navigate("/seller")} />
+                        <Item label="📦 Orders" onClick={() => navigate("/seller/orders")} />
                       </>
                     )}
 
@@ -210,19 +213,21 @@ export default function Navbar() {
           )}
         </div>
 
-        {/* MOBILE MENU BUTTON */}
-        <button
-          onClick={() => setMobileMenu(!mobileMenu)}
-          className="md:hidden text-2xl"
-        >
-          ☰
-        </button>
+        {/* MOBILE */}
+        <div className="flex items-center gap-3 md:hidden">
+          
+          {/* 💬 Chat */}
+          <button onClick={() => openChat(true)}>💬</button>
+
+          {/* Menu */}
+          <button onClick={() => setMobileMenu(!mobileMenu)}>☰</button>
+        </div>
       </div>
     </nav>
   );
 }
 
-/* REUSABLE ITEM */
+/* ITEM */
 function Item({ label, onClick }) {
   return (
     <button

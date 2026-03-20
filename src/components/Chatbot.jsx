@@ -1,18 +1,23 @@
 import { useState } from "react";
 import axios from "axios";
+import { useChatbot } from "../context/ChatbotContext";
 
 export default function Chatbot() {
-  const [open, setOpen] = useState(false);
+  const { open, setOpen } = useChatbot(); // 🔥 global control
+
   const [messages, setMessages] = useState([
-    { bot: "Hi 👋 I’m Bharat Assistant. Ask me anything!" }
+    { bot: "Hi 👋 I’m Bharat Assistant 🇮🇳. Ask me anything!" }
   ]);
+
   const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); // ✅ FIXED
 
   const sendMessage = async () => {
     if (!input.trim()) return;
 
     const userMessage = input;
+
+    // add user message
     setMessages((prev) => [...prev, { user: userMessage }]);
     setInput("");
     setLoading(true);
@@ -39,21 +44,22 @@ export default function Chatbot() {
 
   return (
     <>
-      {/* Toggle Button */}
+      {/* 💬 Floating Button */}
       <button
         onClick={() => setOpen(!open)}
-        className="fixed bottom-5 right-5 bg-orange-600 text-white px-4 py-2 rounded-full shadow-lg"
+        className="fixed bottom-5 right-5 z-50 bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-full shadow-lg"
       >
         💬
       </button>
 
-      {/* Chat Window */}
+      {/* 📦 Chat Window */}
       {open && (
-        <div className="fixed bottom-16 right-5 w-80 bg-white shadow-xl rounded-xl flex flex-col">
+        <div className="fixed bottom-16 right-5 z-50 w-80 bg-white shadow-xl rounded-xl flex flex-col">
           
           {/* Header */}
-          <div className="bg-orange-600 text-white p-3 rounded-t-xl">
-            Bharat Assistant 🇮🇳
+          <div className="bg-orange-600 text-white p-3 rounded-t-xl flex justify-between items-center">
+            <span>Bharat Assistant 🇮🇳</span>
+            <button onClick={() => setOpen(false)}>✖</button>
           </div>
 
           {/* Messages */}
@@ -62,14 +68,15 @@ export default function Chatbot() {
               <div key={i}>
                 {msg.user && (
                   <div className="text-right">
-                    <span className="bg-gray-200 px-2 py-1 rounded">
+                    <span className="bg-gray-200 px-3 py-1 rounded-lg inline-block">
                       {msg.user}
                     </span>
                   </div>
                 )}
+
                 {msg.bot && (
                   <div className="text-left">
-                    <span className="bg-orange-100 px-2 py-1 rounded">
+                    <span className="bg-orange-100 px-3 py-1 rounded-lg inline-block">
                       {msg.bot}
                     </span>
                   </div>
@@ -77,7 +84,9 @@ export default function Chatbot() {
               </div>
             ))}
 
-            {loading && <p className="text-gray-400">Typing...</p>}
+            {loading && (
+              <p className="text-gray-400 text-xs">Typing...</p>
+            )}
           </div>
 
           {/* Input */}
@@ -85,14 +94,14 @@ export default function Chatbot() {
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask something..."
-              className="flex-1 border px-2 py-1 rounded"
+              placeholder="Ask about products, orders..."
+              className="flex-1 border px-2 py-1 rounded text-sm"
               onKeyDown={(e) => e.key === "Enter" && sendMessage()}
             />
 
             <button
               onClick={sendMessage}
-              className="bg-orange-600 text-white px-3 rounded"
+              className="bg-orange-600 hover:bg-orange-700 text-white px-3 rounded"
             >
               ➤
             </button>
