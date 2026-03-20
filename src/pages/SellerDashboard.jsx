@@ -332,7 +332,7 @@ function MyProducts() {
           className="bg-white p-4 rounded-xl shadow hover:shadow-lg transition"
         >
           <img
-            src={`http://localhost:5000${p.images[0]}`}
+            src={`https://traditionalbackend-1.onrender.com${p.images[0]}`}
             className="h-40 w-full object-cover rounded"
           />
 
