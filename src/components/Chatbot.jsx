@@ -1,41 +1,53 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useChatbot } from "../context/ChatbotContext";
 
 export default function Chatbot() {
-  const { open, setOpen } = useChatbot(); // 🔥 global control
+  const { open, setOpen } = useChatbot();
 
   const [messages, setMessages] = useState([
     { bot: "Hi 👋 I’m Bharat Assistant 🇮🇳. Ask me anything!" }
   ]);
 
   const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false); // ✅ FIXED
+  const [loading, setLoading] = useState(false);
+
+  const bottomRef = useRef(null);
+
+  // ✅ Auto scroll to latest message
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const sendMessage = async () => {
-    if (!input.trim()) return;
+    if (!input.trim() || loading) return;
 
     const userMessage = input;
 
-    // add user message
+    // Add user message
     setMessages((prev) => [...prev, { user: userMessage }]);
     setInput("");
     setLoading(true);
 
     try {
       const res = await axios.post(
-        "https://traditionalbackend-1.onrender.com/api/chat",
+        `${API_URL}/api/chat`,
         { message: userMessage }
       );
 
       setMessages((prev) => [
         ...prev,
-        { bot: res.data.reply }
+        { bot: res.data?.reply || "No response 😅" }
       ]);
+
     } catch (error) {
+      console.error("Chat error:", error);
+
       setMessages((prev) => [
         ...prev,
-        { bot: "Server busy 😅 try again" }
+        { bot: "Server busy 😅 try again later" }
       ]);
     }
 
@@ -55,7 +67,7 @@ export default function Chatbot() {
       {/* 📦 Chat Window */}
       {open && (
         <div className="fixed bottom-16 right-5 z-50 w-80 bg-white shadow-xl rounded-xl flex flex-col">
-          
+
           {/* Header */}
           <div className="bg-orange-600 text-white p-3 rounded-t-xl flex justify-between items-center">
             <span>Bharat Assistant 🇮🇳</span>
@@ -84,9 +96,17 @@ export default function Chatbot() {
               </div>
             ))}
 
+            {/* ✅ Typing indicator */}
             {loading && (
-              <p className="text-gray-400 text-xs">Typing...</p>
+              <div className="text-left">
+                <span className="bg-orange-100 px-3 py-1 rounded-lg inline-block text-gray-500">
+                  Typing...
+                </span>
+              </div>
             )}
+
+            {/* ✅ Auto scroll target */}
+            <div ref={bottomRef}></div>
           </div>
 
           {/* Input */}
@@ -101,7 +121,8 @@ export default function Chatbot() {
 
             <button
               onClick={sendMessage}
-              className="bg-orange-600 hover:bg-orange-700 text-white px-3 rounded"
+              disabled={loading}
+              className="bg-orange-600 hover:bg-orange-700 text-white px-3 rounded disabled:opacity-50"
             >
               ➤
             </button>

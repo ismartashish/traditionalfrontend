@@ -26,7 +26,7 @@ export default function Navbar() {
 
   // ✅ FIXED avatar path
   const profileImage = user?.profileImage
-    ? `https://traditionalbackend-1.onrender.com${user.profileImage}`
+    ? `"https://traditionalbackend.onrender.com${user.profileImage}`
     : "/categories/avatar.png";
 
   const handleLogout = () => {

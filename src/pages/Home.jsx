@@ -148,7 +148,7 @@ function FeaturedProducts({ products }) {
             className="bg-white rounded-2xl shadow hover:shadow-xl transition overflow-hidden"
           >
             <img
-              src={`https://traditionalbackend-1.onrender.com${p.images[0]}`}
+              src={`"https://traditionalbackend.onrender.com{p.images[0]}`}
               className="h-48 w-full object-cover"
             />
 
